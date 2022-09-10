@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Radar's model
+model Radar {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  quadrants Quadrant[]
+  rings     Ring[]
+  createdAt DateTime   @default(now()) @map(name: "created_at")
+  updatedAt DateTime   @updatedAt @map(name: "updated_at")
+}
+
+/// Quadrant's model
+model Quadrant {
+  id            String          @id @default(cuid())
+  name          String          @unique
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  radar         Radar           @relation(fields: [radarId], references: [id], onDelete: Cascade)
+  radarId       String
+  AssignedBlips AssignedBlips[]
+}
+
+/// Ring's model
+model Ring {
+  id            String          @id @default(cuid())
+  name          String          @unique
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  radar         Radar           @relation(fields: [radarId], references: [id], onDelete: Cascade)
+  radarId       String
+  AssignedBlips AssignedBlips[]
+}
+
+/// Blip's model
+model Blip {
+  id            String          @id @default(cuid())
+  name          String          @unique
+  desription    String?
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  AssignedBlips AssignedBlips[]
+}
+
+/// AssignedBlips's model
+model AssignedBlips {
+  quadrant   Quadrant @relation(fields: [quadrantId], references: [id], onDelete: Cascade)
+  quadrantId String
+  ring       Ring     @relation(fields: [ringId], references: [id], onDelete: Cascade)
+  ringId     String
+  blip       Blip     @relation(fields: [blipId], references: [id], onDelete: Cascade)
+  blipId     String
+  assignedAt DateTime @default(now())
+
+  @@id([blipId, quadrantId, ringId])
+}
