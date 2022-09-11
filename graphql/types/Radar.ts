@@ -35,13 +35,18 @@ export const RadarQuery = extendType({
         if (!slug) return null;
         const result = await ctx.prisma.radar.findUnique({
           where: { slug },
-          select: {
+          include: {
             quadrants: {
-              select: {
+              include: {
                 quadrant: {
-                  select: { assignedBlips: { select: { blip: true } } },
+                  include: {
+                    assignedBlips: {
+                      include: { blip: true },
+                    },
+                  },
                 },
               },
+              orderBy: [{ quadrant: { order: "desc" } }],
             },
           },
         });

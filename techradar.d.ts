@@ -1,7 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+type BlipModel = {
+  id: string;
+  name: string;
+  description: string;
+  quadrant: Quadrant;
+  ring: Ring;
+  isNew: boolean;
+};
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
-
-export {};
+type Props = {
+  blips: BlipModel[];
+  quadrants: Quadrant[];
+  rings: Ring[];
+};

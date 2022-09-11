@@ -51,6 +51,7 @@ type Quadrant {
   createdAt: DateTime!
   id: ID!
   name: String!
+  order: Int!
   updatedAt: DateTime!
 }
 
@@ -90,6 +91,7 @@ type Ring {
   createdAt: DateTime!
   id: ID!
   name: String!
+  order: Int!
   updatedAt: DateTime!
 }
 

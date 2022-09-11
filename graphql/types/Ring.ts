@@ -7,6 +7,7 @@ export const Ring = objectType({
   definition: (t) => {
     t.field(RingModel.id);
     t.field(RingModel.name);
+    t.field(RingModel.order);
     t.field(RingModel.createdAt);
     t.field(RingModel.updatedAt);
     t.field(RingModel.assignedBlips);

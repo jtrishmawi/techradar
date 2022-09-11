@@ -7,6 +7,7 @@ export const Quadrant = objectType({
   definition: (t) => {
     t.field(QuadrantModel.id)
     t.field(QuadrantModel.name)
+    t.field(QuadrantModel.order)
     t.field(QuadrantModel.createdAt)
     t.field(QuadrantModel.updatedAt)
     t.field(QuadrantModel.assignedBlips)

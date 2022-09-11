@@ -1,11 +1,14 @@
 import { gql } from "@apollo/client";
-import { Blip, Radar } from "@prisma/client";
+import { Quadrant, Radar, Ring } from "@prisma/client";
+import TechRadar from "component/TechRadar";
 import { apolloClient } from "lib/apollo";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-type Param = { params: { slug: string } };
-
-type Props = { blips: Blip[] };
+type Param = {
+  params: {
+    slug: string;
+  };
+};
 
 const AllRadarsQuery = gql`
   query {
@@ -42,8 +45,8 @@ const AllBlipsQuery = gql`
   }
 `;
 
-const Slug: NextPage<Props> = ({ blips }) => {
-  return <pre>{JSON.stringify(blips, null, 2)}</pre>;
+const Slug: NextPage<Props> = (props) => {
+  return <TechRadar {...props} />;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -70,13 +73,36 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { data } = await apolloClient.query({
+  const { data } = await apolloClient.query<{ radar_with_blips: any[] }>({
     query: AllBlipsQuery,
     variables: { slug: params?.slug },
   });
 
+  const currentDate = new Date();
+  currentDate.setHours(24, 0, 0, 0);
+  currentDate.setMonth(currentDate.getMonth() - 1);
+  const lastMonth = currentDate.getTime();
+
+  const blips = data.radar_with_blips.map(
+    ({ id, name, description, assignedBlips }) => {
+      const date = new Date(assignedBlips[0].assignedAt);
+      date.setHours(24, 0, 0, 0);
+      return {
+        id,
+        name,
+        description,
+        quadrant: assignedBlips[0].quadrant,
+        ring: assignedBlips[0].ring,
+        isNew: lastMonth - date.getTime() <= 0,
+      };
+    }
+  );
+
+  const quadrants = Array.from(new Set(blips.map(({ quadrant }) => quadrant)));
+  const rings = Array.from(new Set(blips.map(({ ring }) => ring)));
+
   return {
-    props: { blips: data.radar_with_blips }, // will be passed to the page component as props
+    props: { blips, quadrants, rings },
   };
 };
 export default Slug;
