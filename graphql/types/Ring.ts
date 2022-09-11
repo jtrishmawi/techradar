@@ -9,6 +9,6 @@ export const Ring = objectType({
     t.field(RingModel.name);
     t.field(RingModel.createdAt);
     t.field(RingModel.updatedAt);
-    t.field(RingModel.AssignedBlips);
+    t.field(RingModel.assignedBlips);
   },
 });

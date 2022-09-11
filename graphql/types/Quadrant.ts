@@ -9,6 +9,6 @@ export const Quadrant = objectType({
     t.field(QuadrantModel.name)
     t.field(QuadrantModel.createdAt)
     t.field(QuadrantModel.updatedAt)
-    t.field(QuadrantModel.AssignedBlips)
+    t.field(QuadrantModel.assignedBlips)
   },
 });

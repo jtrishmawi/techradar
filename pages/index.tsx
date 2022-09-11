@@ -6,30 +6,8 @@ const AllRadarsQuery = gql`
     radars {
       id
       name
-      quadrants {
-        id
-        name
-        createdAt
-        updatedAt
-        AssignedBlips {
-          blip {
-            name
-            id
-          }
-        }
-      }
-      rings {
-        id
-        name
-        createdAt
-        updatedAt
-        AssignedBlips {
-          blip {
-            id
-            name
-          }
-        }
-      }
+      slug
+      order
       createdAt
       updatedAt
     }

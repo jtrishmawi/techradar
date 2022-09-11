@@ -16,44 +16,68 @@ datasource db {
 
 /// Radar's model
 model Radar {
-  id        String     @id @default(cuid())
-  name      String     @unique
-  quadrants Quadrant[]
-  rings     Ring[]
-  createdAt DateTime   @default(now()) @map(name: "created_at")
-  updatedAt DateTime   @updatedAt @map(name: "updated_at")
+  id        String             @id @default(cuid())
+  name      String             @unique
+  slug      String             @unique
+  order     Int                @default(0)
+  createdAt DateTime           @default(now()) @map(name: "created_at")
+  updatedAt DateTime           @updatedAt @map(name: "updated_at")
+  quadrants QuadrantsOnRadar[]
+  rings     RingsOnRadar[]
 }
 
 /// Quadrant's model
 model Quadrant {
-  id            String          @id @default(cuid())
-  name          String          @unique
-  createdAt     DateTime        @default(now()) @map(name: "created_at")
-  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
-  radar         Radar           @relation(fields: [radarId], references: [id], onDelete: Cascade)
-  radarId       String
-  AssignedBlips AssignedBlips[]
+  id            String             @id @default(cuid())
+  name          String
+  order         Int                @default(0)
+  createdAt     DateTime           @default(now()) @map(name: "created_at")
+  updatedAt     DateTime           @updatedAt @map(name: "updated_at")
+  radars        QuadrantsOnRadar[]
+  assignedBlips AssignedBlips[]
 }
 
 /// Ring's model
 model Ring {
   id            String          @id @default(cuid())
-  name          String          @unique
+  name          String
+  order         Int             @default(0)
   createdAt     DateTime        @default(now()) @map(name: "created_at")
   updatedAt     DateTime        @updatedAt @map(name: "updated_at")
-  radar         Radar           @relation(fields: [radarId], references: [id], onDelete: Cascade)
-  radarId       String
-  AssignedBlips AssignedBlips[]
+  radars        RingsOnRadar[]
+  assignedBlips AssignedBlips[]
 }
 
 /// Blip's model
 model Blip {
   id            String          @id @default(cuid())
   name          String          @unique
-  desription    String?
+  description   String?
   createdAt     DateTime        @default(now()) @map(name: "created_at")
   updatedAt     DateTime        @updatedAt @map(name: "updated_at")
-  AssignedBlips AssignedBlips[]
+  assignedBlips AssignedBlips[]
+}
+
+/// QuadrantsOnRadar's model
+model QuadrantsOnRadar {
+  radar      Radar    @relation(fields: [radarId], references: [id], onDelete: Cascade)
+  radarId    String
+  quadrant   Quadrant @relation(fields: [quadrantId], references: [id], onDelete: Cascade)
+  quadrantId String
+  assignedAt DateTime @default(now())
+
+  @@id([radarId, quadrantId])
+}
+
+/// RingsOnRadar's model
+model RingsOnRadar {
+  radar      Radar    @relation(fields: [radarId], references: [id], onDelete: Cascade)
+  radarId    String
+  ring       Ring     @relation(fields: [ringId], references: [id], onDelete: Cascade)
+  ringId     String
+  assignedAt DateTime @default(now())
+
+  @@id([radarId, ringId])
 }
 
 /// AssignedBlips's model

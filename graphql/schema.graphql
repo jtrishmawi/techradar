@@ -6,8 +6,11 @@
 type AssignedBlips {
   assignedAt: DateTime!
   blip: Blip!
+  blipId: String!
   quadrant: Quadrant!
+  quadrantId: String!
   ring: Ring!
+  ringId: String!
 }
 
 """
@@ -18,9 +21,9 @@ scalar BigInt
 
 """Blip's model"""
 type Blip {
-  AssignedBlips: [AssignedBlips!]!
+  assignedBlips: [AssignedBlips!]!
   createdAt: DateTime!
-  desription: String
+  description: String
   id: ID!
   name: String!
   updatedAt: DateTime!
@@ -44,15 +47,28 @@ scalar Json @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 
 """Quadrant's model"""
 type Quadrant {
-  AssignedBlips: [AssignedBlips!]!
+  assignedBlips: [AssignedBlips!]!
   createdAt: DateTime!
   id: ID!
   name: String!
   updatedAt: DateTime!
 }
 
+"""QuadrantsOnRadar's model"""
+type QuadrantsOnRadar {
+  assignedAt: DateTime!
+  quadrant: Quadrant!
+  quadrantId: String!
+  radar: Radar!
+  radarId: String!
+}
+
 type Query {
   blips: [Blip]!
+  radar_with_blips(
+    """Radar's slug"""
+    slug: String
+  ): [Blip]
   radars: [Radar]!
 }
 
@@ -61,16 +77,27 @@ type Radar {
   createdAt: DateTime!
   id: ID!
   name: String!
-  quadrants: [Quadrant!]!
-  rings: [Ring!]!
+  order: Int!
+  quadrants: [QuadrantsOnRadar!]!
+  rings: [RingsOnRadar!]!
+  slug: String!
   updatedAt: DateTime!
 }
 
 """Ring's model"""
 type Ring {
-  AssignedBlips: [AssignedBlips!]!
+  assignedBlips: [AssignedBlips!]!
   createdAt: DateTime!
   id: ID!
   name: String!
   updatedAt: DateTime!
+}
+
+"""RingsOnRadar's model"""
+type RingsOnRadar {
+  assignedAt: DateTime!
+  radar: Radar!
+  radarId: String!
+  ring: Ring!
+  ringId: String!
 }

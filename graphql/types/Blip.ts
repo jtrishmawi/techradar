@@ -7,15 +7,15 @@ export const Blip = objectType({
   definition: (t) => {
     t.field(BlipModel.id);
     t.field(BlipModel.name);
-    t.field(BlipModel.desription);
+    t.field(BlipModel.description);
     t.field(BlipModel.createdAt);
     t.field(BlipModel.updatedAt);
-    t.field(BlipModel.AssignedBlips)
+    t.field(BlipModel.assignedBlips)
   },
 });
 
 
-export const BlipQueries = extendType({
+export const BlipQuery = extendType({
   type: "Query",
   definition: (t) => {
     t.nonNull.list.field("blips", {
